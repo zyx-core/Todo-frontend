@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -13,6 +13,7 @@ import { TodoService, TodoTask } from '../../services/todo.service';
 export class Home implements OnInit {
   protected readonly authService = inject(AuthService);
   private readonly todoService = inject(TodoService);
+  private readonly ngZone = inject(NgZone);
 
   tasks: TodoTask[] = [];
   filteredTasks: TodoTask[] = [];
@@ -38,13 +39,17 @@ export class Home implements OnInit {
     this.errorMessage = '';
     this.todoService.getTasks().subscribe({
       next: (data) => {
-        this.tasks = data;
-        this.applyFilter();
-        this.isLoading = false;
+        this.ngZone.run(() => {
+          this.tasks = data;
+          this.applyFilter();
+          this.isLoading = false;
+        });
       },
       error: () => {
-        this.errorMessage = 'Failed to load tasks.';
-        this.isLoading = false;
+        this.ngZone.run(() => {
+          this.errorMessage = 'Failed to load tasks.';
+          this.isLoading = false;
+        });
       }
     });
   }
@@ -57,14 +62,18 @@ export class Home implements OnInit {
 
     this.todoService.createTask(this.newTitle, this.newDescription).subscribe({
       next: (newTask) => {
-        this.tasks.push(newTask);
-        this.newTitle = '';
-        this.newDescription = '';
-        this.applyFilter();
-        this.errorMessage = '';
+        this.ngZone.run(() => {
+          this.tasks.push(newTask);
+          this.newTitle = '';
+          this.newDescription = '';
+          this.applyFilter();
+          this.errorMessage = '';
+        });
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to create task.';
+        this.ngZone.run(() => {
+          this.errorMessage = err.error?.message || 'Failed to create task.';
+        });
       }
     });
   }
@@ -73,11 +82,15 @@ export class Home implements OnInit {
     const updatedStatus = !task.isCompleted;
     this.todoService.updateTask(task.id, task.title, task.description, updatedStatus).subscribe({
       next: (updatedTask) => {
-        task.isCompleted = updatedTask.isCompleted;
-        this.applyFilter();
+        this.ngZone.run(() => {
+          task.isCompleted = updatedTask.isCompleted;
+          this.applyFilter();
+        });
       },
       error: () => {
-        this.errorMessage = 'Failed to update task status.';
+        this.ngZone.run(() => {
+          this.errorMessage = 'Failed to update task status.';
+        });
       }
     });
   }
@@ -101,16 +114,20 @@ export class Home implements OnInit {
 
     this.todoService.updateTask(this.editingTask.id, this.editTitle, this.editDescription, this.editingTask.isCompleted).subscribe({
       next: (updatedTask) => {
-        const index = this.tasks.findIndex(t => t.id === updatedTask.id);
-        if (index !== -1) {
-          this.tasks[index] = updatedTask;
-        }
-        this.editingTask = null;
-        this.applyFilter();
-        this.errorMessage = '';
+        this.ngZone.run(() => {
+          const index = this.tasks.findIndex(t => t.id === updatedTask.id);
+          if (index !== -1) {
+            this.tasks[index] = updatedTask;
+          }
+          this.editingTask = null;
+          this.applyFilter();
+          this.errorMessage = '';
+        });
       },
       error: () => {
-        this.errorMessage = 'Failed to save task edits.';
+        this.ngZone.run(() => {
+          this.errorMessage = 'Failed to save task edits.';
+        });
       }
     });
   }
@@ -119,11 +136,15 @@ export class Home implements OnInit {
     if (confirm('Are you sure you want to delete this task?')) {
       this.todoService.deleteTask(id).subscribe({
         next: () => {
-          this.tasks = this.tasks.filter(t => t.id !== id);
-          this.applyFilter();
+          this.ngZone.run(() => {
+            this.tasks = this.tasks.filter(t => t.id !== id);
+            this.applyFilter();
+          });
         },
         error: () => {
-          this.errorMessage = 'Failed to delete task.';
+          this.ngZone.run(() => {
+            this.errorMessage = 'Failed to delete task.';
+          });
         }
       });
     }

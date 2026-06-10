@@ -22,14 +22,14 @@ pipeline {
 
         stage('Create Network') {
             steps {
-                bat "docker network create %NETWORK% 2>nul || true"
+                bat "docker network inspect %NETWORK% >nul 2>&1 || docker network create %NETWORK%"
             }
         }
 
         stage('Run Frontend Web') {
             steps {
                 bat """
-                docker rm -f %FRONTEND_CONT% 2>nul
+                docker rm -f %FRONTEND_CONT% 2>nul || ver >nul
                 docker run -d --name %FRONTEND_CONT% --network %NETWORK% ^
                     -p 4200:80 ^
                     %IMAGE%
