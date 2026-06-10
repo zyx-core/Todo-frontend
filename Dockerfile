@@ -2,6 +2,8 @@
 FROM node:20 AS build
 WORKDIR /app
 COPY package*.json ./
+RUN npm config set strict-ssl false
+RUN npm install -g npm@11.13.0
 RUN npm ci
 COPY . .
 RUN npm run build

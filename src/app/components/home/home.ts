@@ -79,8 +79,11 @@ export class Home implements OnInit {
   }
 
   toggleTaskCompletion(task: TodoTask) {
-    const updatedStatus = !task.isCompleted;
-    this.todoService.updateTask(task.id, task.title, task.description, updatedStatus).subscribe({
+    const originalStatus = task.isCompleted;
+    task.isCompleted = !originalStatus; // Optimistic update
+    this.applyFilter();
+
+    this.todoService.updateTask(task.id, task.title, task.description, task.isCompleted).subscribe({
       next: (updatedTask) => {
         this.ngZone.run(() => {
           task.isCompleted = updatedTask.isCompleted;
@@ -89,6 +92,8 @@ export class Home implements OnInit {
       },
       error: () => {
         this.ngZone.run(() => {
+          task.isCompleted = originalStatus; // Revert on failure
+          this.applyFilter();
           this.errorMessage = 'Failed to update task status.';
         });
       }
