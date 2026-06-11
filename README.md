@@ -1,59 +1,57 @@
-# SqlFrontend
+# Todo App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.12.
+A full-stack Todo application consisting of a .NET backend and an Angular frontend.
 
-## Development server
+## Project Structure
 
-To start a local development server, run:
+- `Todo-Backend`: A robust RESTful API built with .NET (ASP.NET Core), featuring Entity Framework Core for data access. It includes a Dockerfile and Kubernetes manifests for easy containerization and deployment.
+- `Todo-Frontend`: A modern single-page application built with Angular, providing a responsive user interface for managing todo items.
 
-```bash
-ng serve
-```
+## Prerequisites
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- [.NET 8 SDK](https://dotnet.microsoft.com/download)
+- [Node.js and npm](https://nodejs.org/)
+- [Docker](https://www.docker.com/) (optional, for containerized deployment)
 
-## Code scaffolding
+## Getting Started
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Backend Setup
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Navigate to the `Todo-Backend` directory and start the API:
 
 ```bash
-ng generate --help
+cd Todo-Backend
+dotnet run --project Todo-Backend
 ```
 
-## Building
+The API will typically be available at `https://localhost:5001` or `http://localhost:5000`.
 
-To build the project run:
+### Frontend Setup
+
+Navigate to the `Todo-Frontend/sql_frontend` directory, install the required dependencies, and start the development server:
 
 ```bash
-ng build
+cd Todo-Frontend/sql_frontend
+npm install
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The frontend application will be available in your browser at `http://localhost:4200/`.
 
-## Running unit tests
+## Deployment
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Both the frontend and backend applications are container-ready:
+- **Backend Dockerfile:** Located at `Todo-Backend/Dockerfile`
+- **Frontend Dockerfile:** Located at `Todo-Frontend/sql_frontend/Dockerfile`
 
-```bash
-ng test
-```
+You can use the provided Kubernetes (`k8s`) manifests in the backend directory to orchestrate deployments.
 
-## Running end-to-end tests
+### Hosted Azure Environment
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The application is currently deployed and hosted on Azure Kubernetes Service (AKS). 
+You can access the live frontend application at: **[http://20.204.251.219](http://20.204.251.219)**
+<img width="1916" height="882" alt="Screenshot 2026-06-11 200319" src="https://github.com/user-attachments/assets/35c5e976-d9f5-41e8-8816-eaeb72b77f61" />
+<img width="1904" height="904" alt="Screenshot 2026-06-11 200310" src="https://github.com/user-attachments/assets/9bd1a832-58fd-4de5-9c8c-fb9f8df44894" />
+<img width="1919" height="901" alt="Screenshot 2026-06-11 200344" src="https://github.com/user-attachments/assets/faa6a14a-05bf-4c13-beee-a6f2c4daf46e" />
+<img width="1913" height="881" alt="Screenshot 2026-06-11 200336" src="https://github.com/user-attachments/assets/59c0636b-6091-4a63-8ac8-ad8519c18829" />
+<img width="1915" height="892" alt="Screenshot 2026-06-11 200327" src="https://github.com/user-attachments/assets/35d2d437-edf3-405e-bd73-72b0c5aa2f86" />
